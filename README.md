@@ -1,125 +1,140 @@
-* SOLID OOP(Object Oriented Programming) principles: -> help write readable, maintainable, easy to upgrade/modify code
-==
-- S: Single responsibility
--> A class/function should do one and only one job
--> easy to testing, reading, maintain  
-Ex: 
-``
+# SOLID Object Oriented Programming Principles
+
+Help write readable, maintainable, easy to upgrade/modify code
+
+## S -  Single responsibility
+
+- A class/function should do one and only one job
+- easy to testing, reading, maintain 
+- Example: 
+
+```java
 // bad
-Developer {
+class Developer {
 	name;
 	age;
 	
-	coding();
-	testing();
-	managing();
+	coding(); // violet
+	testing(); // violet
+	managing(); // violet
 	
 }
-
+```
+```java
 // Good
-abstract Employee {
+abstract class Employee {
     name;
 	age;
 }
 
-Developer extend Employee {
+class Developer extend Employee {
 	coding();
 }
 
-Tester extend Employee {
+class Tester extend Employee {
 	testing();
 }
 
-Manger extend Employee {
+class Manger extend Employee {
 	managing();
 }
 
--> In the above example the Employee maintains the Employee info. 
-Developer do coding, tester only do testing and manger only do managing
-``
-==
+// => In the above example the Employee maintains the Employee info. 
+// => Developer do coding, tester only do testing and manger only do managing
+```
 
-O: Open for Extension/Closed for Modification: -> Software entities should be Open for extension, but closed for modification.
--> That mean when we add new one feature we do not need to modify the source code. 
-Ex:
+## O - Open for Extension/Closed for Modification
+- Software entities should be Open for extension, but closed for modification.
+- That mean when we add new one feature we do not need to modify the source code. 
+- Example: 
+```java
 // bad 
-abstract Employee {
+abstract class Employee {
     name;
 	age;
 }
 
-Developer extend Employee {
+class Developer extend Employee {
 	coding();
 }
 
-Manger extend Employee {
-	managingDeveloper(Developer developer);
+class Manger extend Employee {
+	managingDeveloper(Developer developer); 
 }
 
--> when we add new one staff then we need to add more task for manager
-Tester extend Employee {
+// => when we add new one staff then we need to add more task for manager
+class Tester extend Employee {
 	testing();
 }
 
-Manger extend Employee {
-	managingDeveloper(Developer developer);
-	managingTester(Tester tester);
+class Manger extend Employee {
+	managingDeveloper(Developer developer); // violet
+	managingTester(Tester tester); // violet
 }
 
+```
+```java
 // good
-Manger extend Employee {
-	managing(Employee Employee);
+class Manger extend Employee {
+	managing(Employee Employee); // ok
 }
--> when we add new one staff then we don't need to add more task for manager
-==
-L: Liskov Substitution -> A child class must be able to completely substitute and act-in for it’s base(parent) class 
-(1 lop con phai co kha nang thay the hoan toan và hanh dong cho lop cha cua no)(thua ke 100% tu cha cua no)
-Ex: Let say only manager or director can see the employee salary
+// => when we add new one staff then we don't need to add more task for manager
+```
+
+## L - Liskov Substitution
+
+- A child class must be able to completely substitute and act-in for it’s base(parent) class
+- Example: 
+
+```java
+// Let say only manager or director can see the employee salary
 // bad
-
-abstract Employee {
+abstract class Employee {
     name;
-	age;
-	abstract viewOtherMemberSalary();
+    age;
+    abstract viewOtherMemberSalary();
 }
 
-Developer extend Employee {
+class Developer extend Employee {
 	coding();
 	viewOtherMemberSalary(); // Developer role cannot viewOtherMemberSalary
 }
 
-Manger extend Employee {
+class Manger extend Employee {
 	managingDeveloper(Developer developer);
 	viewOtherMemberSalary(); // ok
-}
+} 
 
+```
+```java
 // good
-abstract Employee {
+abstract class Employee {
     name;
-	age;
+    age;
 }
 
-abstract ManagementTeam extend Employee {
+abstract class ManagementTeam extend Employee {
 	abstract viewOtherMemberSalary();
 }
 
-Developer extend Employee {
+class Developer extend Employee {
 	coding();
 }
 
-Manger extend ManagementTeam {
+class Manger extend ManagementTeam {
 	managingDeveloper(Developer developer);
 	viewOtherMemberSalary(); // ok
 }
 
-Director extend ManagementTeam {
+class Director extend ManagementTeam {
 	viewOtherMemberSalary(); // ok
 }
-==
-I: Interface Segregation // Phan chia giao dien
--> A client should never be forced to implement a function that it does not require. Instead of having bloated interfaces, segregate them based on roles.
--> Implement class only have implement what it needs don't forced. should separate by roles
-Ex:
+```
+## I - Interface Segregation
+- A client should never be forced to implement a function that it does not require. Instead of having bloated interfaces, segregate them based on roles.
+- Implement class only have implement what it needs don't forced. should separate by roles
+- Example:
+```java
 // bad
 interface Employee {
 	reporting();
@@ -128,13 +143,15 @@ interface Employee {
 	manage()
 }
 
-Developer implement Employee {
+class Developer implement Employee {
 	coding() { i can code };
 	reporting(){ i can report };
 	testing(){}; // violet
 	manage(){}; // violet
 }
+```
 
+```java
 // good
 interface Employee {
 	reporting();
@@ -154,15 +171,15 @@ interface MangeAble {
 }
 
 
-Developer implement CodeAble, Employee {
-	coding() { i can code };
-	reporting(){ i can report };
+class Developer implement CodeAble, Employee {
+	coding() { i can code }; // ok
+	reporting(){ i can report }; //ok
 }
-==
-D: Dependency Inversion - Dao nguoc phu thuoc
--> Entities must depend on abstractions instead of concretions. Instead of using direct references from a high-level module to a low-level module, use abstractions.
--> phu thuoc vao abstractions ko phai class
-Ex: 
+```
+## D - Dependency Inversion
+- Entities must depend on abstractions instead of concretions. Instead of using direct references from a high-level module to a low-level module, use abstractions.
+- Example:
+```java
 // bad 
 class ApplePhone {
 	call();
@@ -182,8 +199,9 @@ class PhoneUser() {
 	}
 }
 
--> when we want to use other type of phone like SamsungPhone we need to modify the PhoneUser again or update ApplePhone
-
+// -> when we want to use other type of phone like SamsungPhone we need to modify the PhoneUser again or update ApplePhone
+```
+```java
 // good
 interface SmartPhone {
 	call();
@@ -213,13 +231,11 @@ class PhoneUser() {
 	}
 }
 
+```
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+Please make sure to update tests as appropriate.
 
-
-
-
-
-
-
-
-
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
